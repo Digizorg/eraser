@@ -44,6 +44,17 @@ public class EraserPlugin implements FlutterPlugin, MethodCallHandler {
         }
       }
       result.success(null);
+    } else if("clearSpecificAppNotifications".equals(call.method)) {
+      String channelId = call.argument("channelId");
+      NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+      StatusBarNotification[] notifications = notificationManager.getActiveNotifications();
+      for (StatusBarNotification notification : notifications) {
+        String notificationChannelId = notification.getNotification().getChannelId();
+        if(notificationChannelId.equals(channelId)){
+          notificationManager.cancel(notification.getId());
+        }
+      }
+      result.success(null);
     } else {
       result.notImplemented();
     }

@@ -1,9 +1,10 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
 
 class Eraser {
-  static const MethodChannel _channel = const MethodChannel('eraser');
+  static const MethodChannel _channel = MethodChannel('eraser');
 
   /// Clears all push notifications that have been received by your Flutter app.
   ///
@@ -15,8 +16,10 @@ class Eraser {
     try {
       await _channel.invokeMethod('clearAllAppNotifications');
     } on PlatformException catch (e) {
-      print(
-          'Failed to clear all app notifications for following reason: ${e.message}');
+      log(
+        'Failed to clear all app notifications for following reason: ${e.message}',
+        name: 'Eraser',
+      );
     }
   }
 
@@ -32,8 +35,34 @@ class Eraser {
         'tag': tag,
       });
     } on PlatformException catch (e) {
-      print(
-          'Failed to clear app notifications for tag ($tag) for following reason: ${e.message}');
+      log(
+        'Failed to clear app notifications for tag ($tag) for following reason: ${e.message}',
+        name: 'Eraser',
+      );
+    }
+  }
+
+  /// Clears all push notifications that have been received by your Flutter app
+  /// with specific conditions. On iOS, all notifications that match the
+  /// specified [dataKey] and [dataValue] will be cleared. On Android, all
+  /// notifications that have the specified [channelId] will be cleared.
+  static Future<void> clearSpecificAppNotifications({
+    required String dataKey,
+    required String dataValue,
+    required String channelId,
+  }) async {
+    try {
+      await _channel
+          .invokeMethod('clearSpecificAppNotifications', <String, dynamic>{
+        'dataKey': dataKey, // e.g: 'NotificationType'
+        'dataValue': dataValue, // e.g: 'new_chat_message'
+        'channelId': channelId, // e.g: '1001'
+      });
+    } on PlatformException catch (e) {
+      log(
+        'Failed to clear specific app notifications for following reason: ${e.message}',
+        name: 'Eraser',
+      );
     }
   }
 
@@ -47,7 +76,10 @@ class Eraser {
         await _channel
             .invokeMethod('resetBadgeCountAndRemoveNotificationsFromCenter');
       } on PlatformException catch (e) {
-        print('Failed to reset badge count for following reason: ${e.message}');
+        log(
+          'Failed to reset badge count for following reason: ${e.message}',
+          name: 'Eraser',
+        );
       }
     }
   }
@@ -62,7 +94,10 @@ class Eraser {
         await _channel
             .invokeMethod('resetBadgeCountButKeepNotificationsInCenter');
       } on PlatformException catch (e) {
-        print('Failed to reset badge count for following reason: ${e.message}');
+        log(
+          'Failed to reset badge count for following reason: ${e.message}',
+          name: 'Eraser',
+        );
       }
     }
   }
