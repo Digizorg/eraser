@@ -42,8 +42,6 @@ public class SwiftEraserPlugin: NSObject, FlutterPlugin {
                         let identifiersToRemove = notificationsToRemove.map { $0.request.identifier }
                         center.removeDeliveredNotifications(withIdentifiers: identifiersToRemove)
                         print("Removed notifications with \(dataKey) matching tag: \(dataValue)")
-                    } else {
-                        print("No notifications found with \(dataKey) matching tag: \(dataValue)")
                     }
                 }
         }
